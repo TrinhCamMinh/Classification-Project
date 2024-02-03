@@ -18,28 +18,27 @@ export const Cards = () => {
 
     if (error) return <div className='text-red-600'>Failed to load 😥</div>;
     if (isLoading) return <span className='loading loading-spinner text-secondary'></span>;
+    if (!data) return <h2>API Calling Exceeded Limitation</h2>;
 
     //* Save data to session storage for Blog detail page
     sessionStorage.setItem('news', JSON.stringify(data.results));
 
     return (
-        <>
-            <div className='flex flex-col gap-8'>
-                {data.results.map((item) => {
-                    return (
-                        <Card
-                            key={item.article_id}
-                            id={item.article_id}
-                            title={item.title}
-                            description={item.description}
-                            image={item.image_url}
-                            category={item.category[0]} //* take only the first category
-                            date={item.pubDate}
-                        />
-                    );
-                })}
-            </div>
-        </>
+        <div className='flex flex-col gap-8'>
+            {data.results.map((item) => {
+                return (
+                    <Card
+                        key={item.article_id}
+                        id={item.article_id}
+                        title={item.title}
+                        description={item.description}
+                        image={item.image_url}
+                        category={item.category[0]} //* take only the first category
+                        date={item.pubDate}
+                    />
+                );
+            })}
+        </div>
     );
 };
 
