@@ -32,6 +32,7 @@ export const Cards = () => {
                         Seq_Predicted={item[Seq_Predicted]}
                         SVM_Linear_Predicted={item[SVM_Linear_Predicted]}
                         Logistic_Predicted={item[Logistic_Predicted]}
+                        LSTM_Predicted={item[LSTM]}
                     />
                 );
             })}
