@@ -1,40 +1,37 @@
-import useSWR from 'swr';
 import { Card } from '../Components/Card';
-
-const apikey = import.meta.env.VITE_NEWS_APIKEY;
-const country = 'us,gb,vi,sg,se'; //* US, UK, VN, SINGAPORE, SWEDEN
-const category = 'business,entertainment,education,health,technology';
-const language = 'en';
-const full_content = 1;
-const image = 1;
-const size = 5;
+import { useEffect, useState } from 'react';
 
 export const Cards = () => {
-    const fetcher = (...args) => fetch(...args).then((res) => res.json());
-    const { data, error, isLoading } = useSWR(
-        `https://newsdata.io/api/1/news?apikey=${apikey}&country=${country}&category=${category}&language=${language}&full_content=${full_content}&image=${image}&size=${size}`,
-        fetcher
-    );
+    const [article, setArticle] = useState([]);
 
-    if (error) return <div className='text-red-600'>Failed to load 😥</div>;
-    if (isLoading) return <span className='loading loading-spinner text-secondary'></span>;
-    if (!data) return <h2>API Calling Exceeded Limitation</h2>;
+    const handleFetchCNNArticles = async () => {
+        const res = await fetch('http://127.0.0.1:5000');
+        const json = await res.json();
+        setArticle(json);
+    };
 
-    //* Save data to session storage for Blog detail page
-    sessionStorage.setItem('news', JSON.stringify(data.results));
+    useEffect(() => {
+        handleFetchCNNArticles();
+    }, []);
 
     return (
         <div className='flex flex-col gap-8'>
-            {data.results.map((item) => {
+            {article.map((item) => {
                 return (
                     <Card
-                        key={item.article_id}
-                        id={item.article_id}
-                        title={item.title}
-                        description={item.description}
-                        image={item.image_url}
-                        category={item.category[0]} //* take only the first category
-                        date={item.pubDate}
+                        key={item.ID}
+                        id={item.ID}
+                        title={item.Headline}
+                        description={item.Description}
+                        image={item.Image}
+                        category={item.Category} // Category default by CNN
+                        date={item.Date_Published}
+                        url={item.URL}
+                        keywords={item.Keywords}
+                        author={item.Author}
+                        Seq_Predicted={item[Seq_Predicted]}
+                        SVM_Linear_Predicted={item[SVM_Linear_Predicted]}
+                        Logistic_Predicted={item[Logistic_Predicted]}
                     />
                 );
             })}
